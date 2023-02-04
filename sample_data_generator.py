@@ -3,10 +3,13 @@ from math import *
 import numpy as np
 import numpy.typing
 import matplotlib.pyplot as plt
+from db import db_connection
 
 
 NUM_DAY_SAMPLES = 24 * 60
 DAY_SAMPLES = np.linspace(0, 23.99, NUM_DAY_SAMPLES)
+
+MOCK_BASKET_ID = 0x23232323
 
 
 def gaussian(x, mu, var):
@@ -65,7 +68,7 @@ class UnplayableDay(DayType):
     people_detected_distribution: numpy.typing.ArrayLike
 
     num_accelerometer_data_samples: int = 20
-    num_basket_samples: int = 3
+    num_basket_samples: int = 4
     num_people_detected_samples: int = 50
 
     def __init__(self):
@@ -76,7 +79,7 @@ class UnplayableDay(DayType):
     @staticmethod
     def generate_accelerometer_data_distribution():
         mu = (14.5 + 17) / 2
-        var = 1000
+        var = 50
 
         distr = np.vectorize(lambda x: gaussian(x, mu, var))(DAY_SAMPLES)
         distr /= np.sum(distr)
@@ -86,7 +89,7 @@ class UnplayableDay(DayType):
     @staticmethod
     def generate_basket_distribution():
         mu = (14.5 + 17) / 2
-        var = 1
+        var = 50
 
         distr = np.vectorize(lambda x: gaussian(x, mu, var))(DAY_SAMPLES)
         distr /= np.sum(distr)
@@ -296,19 +299,74 @@ def sample_measurements_for_day(date: datetime, verbose=True):
 
         plt.show()
 
+    db_cursor = db_connection.cursor()
+    
+    # Insert AccelerometerData
+    db_cursor.executemany("""
+        INSERT INTO accelerometer_data
+            (basket_id,
+                accel_x, accel_y, accel_z,
+                gyro_x, gyro_y, gyro_z,
+                temperature,
+                timestamp)
+        VALUES
+            (%(basket_id)s, %(accel_x)s, %(accel_y)s, %(accel_z)s, %(gyro_x)s, %(gyro_y)s, %(gyro_z)s, %(temperature)s, %(timestamp)s)
+    """, [
+        { 'basket_id': MOCK_BASKET_ID,
+            'accel_x': 23, 'accel_y': 23, 'accel_z': 23,
+            'gyro_x': 23, 'gyro_y': 23, 'gyro_z': 23,
+            'temperature': 23,
+            'timestamp': date + timedelta(minutes=round(day_t * 60))
+        } for day_t in accelerator_data_samples
+    ])
+
+    # Insert Basket
+    db_cursor.executemany("""
+        INSERT INTO basket_data
+            (basket_id, timestamp)
+        VALUES
+            (%(basket_id)s, %(timestamp)s)
+    """, [
+        { 'basket_id': MOCK_BASKET_ID,
+            'timestamp': date + timedelta(minutes=round(day_t * 60))
+        } for day_t in basket_samples
+    ])
+
+    # Insert PeopleDetected
+    db_cursor.executemany("""
+        INSERT INTO people_detected_data
+            (basket_id, timestamp)
+        VALUES
+            (%(basket_id)s, %(timestamp)s)
+    """, [
+        { 'basket_id': MOCK_BASKET_ID,
+            'timestamp': date + timedelta(minutes=round(day_t * 60))
+        } for day_t in people_detected_samples
+    ])
+
+    db_cursor.close()
 
     return (
-        basket_samples,
         accelerator_data_samples,
+        basket_samples,
         people_detected_samples,
     )
 
 
 def sample_measurements_between(from_date: datetime, to_date: datetime, verbose=True):
+    # Delete the old measurements referred to the mock basket
+    db_cursor = db_connection.cursor()
+    db_cursor.execute("DELETE FROM accelerometer_data WHERE basket_id=%s", (MOCK_BASKET_ID,))
+    db_cursor.execute("DELETE FROM basket_data WHERE basket_id=%s", (MOCK_BASKET_ID,))
+    db_cursor.execute("DELETE FROM people_detected_data WHERE basket_id=%s", (MOCK_BASKET_ID,))
+    db_cursor.close()
+
     date = from_date
     while (date <= to_date):
         sample_measurements_for_day(date, verbose)
         date += timedelta(days=1)
+
+    db_connection.commit()
 
 
 def show_day_type_distributions(day_type: DayType, **kwargs):
@@ -337,7 +395,7 @@ def show_day_type_distributions(day_type: DayType, **kwargs):
 
 
 if __name__ == "__main__":
-    verbose=True
+    verbose=False
 
     try:
         if verbose:
@@ -346,6 +404,7 @@ if __name__ == "__main__":
             show_day_type_distributions(playable_day)
 
         sample_measurements_between(datetime(2016, 1, 1), datetime(2016, 12, 31), verbose=verbose)
+
     except KeyboardInterrupt as _:
         pass
 
