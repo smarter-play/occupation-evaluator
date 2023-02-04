@@ -65,7 +65,7 @@ class UnplayableDay(DayType):
     people_detected_distribution: numpy.typing.ArrayLike
 
     num_accelerometer_data_samples: int = 20
-    num_basket_samples: int = 5
+    num_basket_samples: int = 3
     num_people_detected_samples: int = 50
 
     def __init__(self):
@@ -337,7 +337,7 @@ def show_day_type_distributions(day_type: DayType, **kwargs):
 
 
 if __name__ == "__main__":
-    verbose=False
+    verbose=True
 
     try:
         if verbose:
