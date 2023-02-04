@@ -13,6 +13,10 @@ def gaussian(x, mu, var):
     return (1 / sqrt(2 * pi * var)) * exp(-((x - mu) ** 2 / (2 * var)))
 
 
+def noise(n: float):
+    return abs(modf(sin(n) * 43758.5453123)[0])
+
+
 # ------------------------------------------------------------------------------------------------
 # DayType
 # ------------------------------------------------------------------------------------------------
@@ -100,12 +104,7 @@ class UnplayableDay(DayType):
         return distr
 
     def is_(date: datetime):
-        # TODO BETTER DETERMINISTIC
-        rainy = np.random.rand(1)[0] <= \
-            [0.1, 0.1, 0.08, 0.06, 0.03, 0.01, 0.01, 0.02, 0.1, 0.15, 0.1, 0.1][date.month - 1]
-        too_cold = np.random.rand(1)[0] <= \
-            [0.8, 0.5, 0.2, 0.01, 0.001, 0.0001, 0.0001, 0.0001, 0.001, 0.1, 0.4, 0.7][date.month - 1]
-        return rainy or too_cold
+        return noise(date.month * 31 + date.day) <= [0.9, 0.8, 0.6, 0.38, 0.3, 0.1, 0.08, 0.07, 0.1, 0.3, 0.79, 0.9][date.month - 1]
 
 
 # ------------------------------------------------------------------------------------------------
@@ -338,7 +337,7 @@ def show_day_type_distributions(day_type: DayType, **kwargs):
 
 
 if __name__ == "__main__":
-    verbose=True
+    verbose=False
 
     try:
         if verbose:
