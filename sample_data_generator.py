@@ -183,9 +183,9 @@ class PlayableDay(DayType):
     basket_distribution: numpy.typing.ArrayLike
     people_detected_distribution: numpy.typing.ArrayLike
 
-    num_accelerometer_data_samples: int = 100
+    num_accelerometer_data_samples: int = 150
     num_basket_samples: int = 50
-    num_people_detected_samples: int = 100
+    num_people_detected_samples: int = 200
 
     def __init__(self):
         self.accelerometer_data_distribution = self.generate_accelerometer_data_distribution()
@@ -300,7 +300,7 @@ def sample_measurements_for_day(date: datetime, verbose=True):
         plt.show()
 
     db_cursor = db_connection.cursor()
-    
+
     # Insert AccelerometerData
     db_cursor.executemany("""
         INSERT INTO accelerometer_data
