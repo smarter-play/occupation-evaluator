@@ -7,14 +7,11 @@ from math import *
 import pytz
 
 
-MOCK_BASKET_ID = 0x23232323
+def occupation(basket_id: int, t):
+    if np.isscalar(t):
+        t = [t]    
 
-
-def occupation(basket_id: int, t_array):
-    if np.isscalar(t_array):
-        t_array = [t_array]    
-
-    t_min, t_max = np.amin(t_array), np.amax(t_array)
+    t_min, t_max = np.amin(t), np.amax(t)
 
     # Query data
     db_cursor = db_connection.cursor()
@@ -52,7 +49,7 @@ def occupation(basket_id: int, t_array):
     db_cursor.close()
 
     # Occupation evaluation
-    occupation_array = np.zeros(len(t_array))
+    occupation_array = np.zeros(len(t))
 
     def evaluate_occupation(t_array, measurement_data, contribution, occupation_array):
         base_idx = 0
@@ -93,14 +90,16 @@ def occupation(basket_id: int, t_array):
 
         return y
 
-    evaluate_occupation(t_array, accelerometer_data, lambda t, event_t: probability_curve(t, event_t, 0.1, 60 * 10), occupation_array)
-    evaluate_occupation(t_array, basket_data, lambda t, event_t: probability_curve(t, event_t, 0.4, 60 * 20), occupation_array)
-    evaluate_occupation(t_array, people_detected_data, lambda t, event_t: probability_curve(t, event_t, 0.06, 60), occupation_array)
+    evaluate_occupation(t, accelerometer_data, lambda t, event_t: probability_curve(t, event_t, 0.1, 60 * 10), occupation_array)
+    evaluate_occupation(t, basket_data, lambda t, event_t: probability_curve(t, event_t, 0.4, 60 * 20), occupation_array)
+    evaluate_occupation(t, people_detected_data, lambda t, event_t: probability_curve(t, event_t, 0.06, 60), occupation_array)
 
     return np.minimum(occupation_array, 1)
 
 
 def main():
+    MOCK_BASKET_ID = 0x23232323
+
     from_date = datetime(2016, 8, 15, 0, 0, tzinfo=pytz.timezone('UTC'))
     to_date = datetime(2016, 8, 15, 23, 59, tzinfo=pytz.timezone('UTC'))
 
