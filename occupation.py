@@ -5,9 +5,9 @@ from math import *
 
 def evaluate_occupation(basket_id: int, t):
     if np.isscalar(t):
-        t = [t]    
+        t = [t]
 
-    t_min, t_max = np.amin(t), np.amax(t)
+    t_min, t_max = np.amin(t).item(), np.amax(t).item()
 
     # Query data
     db_cursor = db_connection.cursor()
@@ -45,7 +45,7 @@ def evaluate_occupation(basket_id: int, t):
     db_cursor.close()
 
     # Occupation evaluation
-    occupation_array = np.zeros(len(t))
+    o_t = np.zeros(len(t))
 
     def evaluate_occupation(t_array, measurement_data, contribution, occupation_array):
         base_idx = 0
@@ -86,9 +86,10 @@ def evaluate_occupation(basket_id: int, t):
 
         return y
 
-    evaluate_occupation(t, accelerometer_data, lambda t, event_t: probability_curve(t, event_t, 0.1, 60 * 10), occupation_array)
-    evaluate_occupation(t, basket_data, lambda t, event_t: probability_curve(t, event_t, 0.4, 60 * 20), occupation_array)
-    evaluate_occupation(t, people_detected_data, lambda t, event_t: probability_curve(t, event_t, 0.06, 60), occupation_array)
+    evaluate_occupation(t, accelerometer_data, lambda t, event_t: probability_curve(t, event_t, 0.1, 60 * 10), o_t)
+    evaluate_occupation(t, basket_data, lambda t, event_t: probability_curve(t, event_t, 0.4, 60 * 20), o_t)
+    evaluate_occupation(t, people_detected_data, lambda t, event_t: probability_curve(t, event_t, 0.06, 60), o_t)
 
-    return np.minimum(occupation_array, 1)
+    o_t = np.minimum(o_t, 1)
 
+    return o_t[0] if len(o_t) == 1 else o_t.tolist()
