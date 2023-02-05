@@ -75,7 +75,7 @@ def main():
 
     # Occupation probability plot
     print("Generating occupation probability data...")
-    x = np.linspace(from_date_timestamp, to_date_timestamp, 1024)
+    x = np.linspace(from_date_timestamp, to_date_timestamp, 2048)
     y = evaluate_occupation(MOCK_BASKET_ID, x)
 
     ax[1].plot(x, y)
