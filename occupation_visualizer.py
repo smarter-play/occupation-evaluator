@@ -4,7 +4,7 @@ from db import db_connection
 import numpy as np
 from math import *
 import matplotlib.pyplot as plt
-from occupation import occupation
+from occupation import evaluate_occupation
 
 
 def main():
@@ -76,7 +76,7 @@ def main():
     # Occupation probability plot
     print("Generating occupation probability data...")
     x = np.linspace(from_date_timestamp, to_date_timestamp, 1024)
-    y = occupation(MOCK_BASKET_ID, x)
+    y = evaluate_occupation(MOCK_BASKET_ID, x)
 
     ax[1].plot(x, y)
     ax[1].set_title("Occupation probability")

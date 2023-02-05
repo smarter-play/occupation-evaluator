@@ -3,7 +3,7 @@ import numpy as np
 from math import *
 
 
-def occupation(basket_id: int, t):
+def evaluate_occupation(basket_id: int, t):
     if np.isscalar(t):
         t = [t]    
 
