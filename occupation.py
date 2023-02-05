@@ -73,7 +73,7 @@ def occupation(basket_id: int, t_array):
 
                 t_delta = t - measure_t
                 #print(f"measure {datetime.fromtimestamp(measure_t)} - t {datetime.fromtimestamp(t)} => t_delta {t_delta} ", end='')
-                if t_delta <= (60 * 10):
+                if t_delta <= (60 * 30):
                     # If it's within the 5 minutes range, then it could contribute to the final occupation
                     #print(f"contrib")
                     occupation_array[i] += contribution(t, measure_t)
@@ -93,16 +93,16 @@ def occupation(basket_id: int, t_array):
 
         return y
 
-    evaluate_occupation(t_array, accelerometer_data, lambda t, event_t: probability_curve(t, event_t, 0.09, 60), occupation_array)
-    evaluate_occupation(t_array, basket_data, lambda t, event_t: probability_curve(t, event_t, 0.3, 60 * 5), occupation_array)
-    evaluate_occupation(t_array, people_detected_data, lambda t, event_t: probability_curve(t, event_t, 0.02, 30), occupation_array)
+    evaluate_occupation(t_array, accelerometer_data, lambda t, event_t: probability_curve(t, event_t, 0.1, 60 * 10), occupation_array)
+    evaluate_occupation(t_array, basket_data, lambda t, event_t: probability_curve(t, event_t, 0.4, 60 * 20), occupation_array)
+    evaluate_occupation(t_array, people_detected_data, lambda t, event_t: probability_curve(t, event_t, 0.06, 60), occupation_array)
 
-    return occupation_array
+    return np.minimum(occupation_array, 1)
 
 
 def main():
-    from_date = datetime(2016, 4, 15, 0, tzinfo=pytz.timezone('UTC'))
-    to_date = datetime(2016, 4, 25, 0, tzinfo=pytz.timezone('UTC'))
+    from_date = datetime(2016, 8, 15, 0, 0, tzinfo=pytz.timezone('UTC'))
+    to_date = datetime(2016, 8, 15, 23, 59, tzinfo=pytz.timezone('UTC'))
 
     db_cursor = db_connection.cursor()
 
@@ -172,7 +172,7 @@ def main():
     ax[1].plot(x, y)
     ax[1].set_title("Occupation probability")
     ax[1].set_xlabel("Time")
-    ax[1].set_ylim(0, 1)
+    ax[1].set_ylim(0, 1.25)
     ax[1].set_xticks(ticks=x_ticks, labels=x_ticks_labels, fontsize=7)
 
     fig.tight_layout()
