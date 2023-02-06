@@ -4,6 +4,7 @@ import numpy as np
 import numpy.typing
 import matplotlib.pyplot as plt
 from db import db_connection
+from weather import is_unplayable_day
 
 
 NUM_DAY_SAMPLES = 24 * 60
@@ -14,10 +15,6 @@ MOCK_BASKET_ID = 0x23232323
 
 def gaussian(x, mu, var):
     return (1 / sqrt(2 * pi * var)) * exp(-((x - mu) ** 2 / (2 * var)))
-
-
-def noise(n: float):
-    return abs(modf(sin(n) * 43758.5453123)[0])
 
 
 # ------------------------------------------------------------------------------------------------
@@ -107,7 +104,7 @@ class UnplayableDay(DayType):
         return distr
 
     def is_(date: datetime):
-        return noise(date.month * 31 + date.day) <= [0.9, 0.8, 0.6, 0.38, 0.3, 0.1, 0.08, 0.07, 0.1, 0.3, 0.79, 0.9][date.month - 1]
+        return is_unplayable_day(date)
 
 
 # ------------------------------------------------------------------------------------------------
@@ -403,7 +400,7 @@ if __name__ == "__main__":
             show_day_type_distributions(busy_day)
             show_day_type_distributions(playable_day)
 
-        sample_measurements_between(datetime(2016, 1, 1), datetime(2016, 12, 31), verbose=verbose)
+        sample_measurements_between(datetime(2015, 1, 1), datetime(2016, 12, 31), verbose=verbose)
 
     except KeyboardInterrupt as _:
         pass
