@@ -1,4 +1,4 @@
-from occupation_forecast import forecast_occupation
+from occupation_forecast import evaluate_occupation_forecast
 from datetime import datetime
 
 
@@ -10,7 +10,7 @@ def main():
     num_predicted_days = 14
     t = datetime(2016, 8, 6, 17, 0, 0)
 
-    occupation = forecast_occupation(
+    occupation = evaluate_occupation_forecast(
         MOCK_BASKET_ID,
         present,
         num_history_days,

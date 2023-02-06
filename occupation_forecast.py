@@ -7,7 +7,7 @@ import matplotlib.pyplot as plt
 import weather
 
 
-def forecast_occupation_for_next_days(
+def evaluate_occupation_forecast_for_next_days(
     basket_id: int,
     present,
     num_history_days: int,
@@ -119,7 +119,7 @@ def forecast_occupation_for_next_days(
     return predicted_t[-num_predicted_days * 24 * 2:], predicted_occupation_t[-num_predicted_days * 24 * 2:]
 
 
-def forecast_occupation(
+def evaluate_occupation_forecast(
     basket_id: int,
     present,
     num_history_days: int,
@@ -148,7 +148,7 @@ def forecast_occupation(
 
     debug = kwargs.get('debug', False)
 
-    prediction = forecast_occupation_for_next_days(
+    prediction = evaluate_occupation_forecast_for_next_days(
         basket_id,
         present,
         num_history_days,
