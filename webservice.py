@@ -1,43 +1,63 @@
 from flask import Flask, request
-from occupation import evaluate_occupation
 from datetime import datetime
+from dateutil.parser import isoparse
+from occupation import evaluate_occupation
+from occupation_forecast import evaluate_occupation_forecast
 
 
 app = Flask(__name__)
 
 
+def require_field(name: str):
+    if not name in request.args:
+        raise ValueError({ 'error': f"Missing required field: \"{name}\"", }, 400)
+
+
 @app.route("/api/occupation", methods=['GET'])
 def occupation():
-    if not 'basket' in request.args:
-        return { 'error': "Missing required field: \"basket\"", }, 400
+    try:
+        require_field('basket')
+        require_field('t')
+    except Exception as e:
+        return e.args
 
-    if not 't' in request.args:
-        return { 'error': "Missing required field: \"t\"", }, 400
+    basket_id = int(request.args['basket'])
+    t = datetime.fromisoformat(request.args['t'])
 
-    basket = int(request.args['basket'])
-    t = int(request.args['t'])  # Unix timestamp
-
-    o_t = evaluate_occupation(basket, t)
+    o_t = evaluate_occupation(basket_id, t)
     return {
         'occupation': o_t,
-        'datetime': datetime.fromtimestamp(t)
+        't': t.isoformat(),
     }, 200
 
 
-@app.route("/api/occupation_forecast", methods=["GET"])
-def occupation_forecast():
-    if not 'basket' in request.args:
-        return { 'error': "Missing required field: \"basket\"", }, 400
+@app.route("/api/forecast_occupation", methods=["GET"])
+def forecast_occupation():
+    try:
+        require_field('basket')
+        require_field('t')
+        require_field('present')
+        require_field('num_history_days')
+        require_field('num_predicted_days')
+    except Exception as e:
+        return e.args
 
-    if not 't' in request.args:
-        return { 'error': "Missing required field: \"t\"", }, 400
-        
-    basket = request.args['basket']
-    t = request.args['t']  # Unix timestamp
+    basket_id = int(request.args['basket'])
+    present = datetime.fromisoformat(request.args['present'])
+    num_history_days = int(request.args['num_history_days'])
+    num_predicted_days = int(request.args['num_predicted_days'])
+    t = datetime.fromisoformat(request.args['t'])
 
-    o_t = 0
+    o_t = evaluate_occupation_forecast(
+        basket_id,
+        present,
+        num_history_days,
+        num_predicted_days,
+        t
+    )
     return {
-        'occupation': o_t
+        'occupation': o_t,
+        't': t.isoformat(),
     }, 200
 
 
