@@ -16,9 +16,9 @@ def evaluate_occupation(basket_id: int, t):
         A single or an array of occupations depending if the input was a scalar or an array
     """
 
-    if np.isscalar(t):
+    if not (type(t) is list or np.ndarray):
         t = [t]
-
+    
     t_min, t_max = np.amin(t), np.amax(t)
 
     # Query data
