@@ -36,7 +36,9 @@ def occupation_forecast():
     t = request.args['t']  # Unix timestamp
 
     o_t = 0
-    return { 'occupation': o_t }, 200
+    return {
+        'occupation': o_t
+    }, 200
 
 
 if __name__ == '__main__':
