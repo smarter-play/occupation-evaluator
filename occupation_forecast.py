@@ -1,9 +1,8 @@
 from prophet import Prophet
-from prophet.plot import add_changepoints_to_plot
 import pandas as pd
 from occupation import evaluate_occupation
 import numpy as np
-from datetime import datetime, timedelta
+from datetime import timedelta
 import matplotlib.pyplot as plt
 import weather
 
@@ -23,6 +22,8 @@ def forecast_occupation_for_next_days(
         - `present`: The date from which the forecast is performed.
         - `num_history_days`: The number of days prior the `present` date to take data from.
         - `num_predictory_days`: The number of days past the `present` date to predict.
+
+    Keyword parameters:
         - `debug`: Whether to show debug plots.
         - `num_past_days_in_plot`: The number of days prior the `present` date to show on the debug plot.
         - `num_future_days_in_plot`: The number of days past the `present` date to show on the debug plot.
@@ -31,7 +32,7 @@ def forecast_occupation_for_next_days(
         A 2d-tuple containing the array of future time samples and another array holding respectively their predicted occupancy value
     """
 
-    debug = kwargs.get('debug', False),
+    debug = kwargs.get('debug', False)
     num_past_days_in_plot = kwargs.get('num_past_days_in_plot', 3)
     num_future_days_in_plot = kwargs.get('num_future_days_in_plot', 3)
 
@@ -90,7 +91,7 @@ def forecast_occupation_for_next_days(
 
     # Plotting
     if debug:
-        model.plot_components(prediction)
+        #model.plot_components(prediction)
 
         fig, ax = plt.subplots(sharex=True, figsize=(16, 6))
 
@@ -112,33 +113,77 @@ def forecast_occupation_for_next_days(
 
         plt.show()
 
-    return \
-        prediction['ds'].tolist()[num_predicted_days * 24 * 2], \
-        prediction['yhat'].tolist()[num_predicted_days * 24 * 2]
+    predicted_t = prediction['ds'].dt.to_pydatetime()
+    predicted_occupation_t = prediction['yhat']
+
+    return predicted_t[-num_predicted_days * 24 * 2:], predicted_occupation_t[-num_predicted_days * 24 * 2:]
 
 
-def forecast_occupation(basket_id: int, present, num_history_days: int, num_future_days: int, t):
-    prediction = forecast_occupation_for_next_days(basket_id, present, num_history_days, num_future_days, False)
+def forecast_occupation(
+    basket_id: int,
+    present,
+    num_history_days: int,
+    num_future_days: int,
+    t,
+    **kwargs
+):
+    """
+    Forecast the occupation for a certain basket at a certain interval in the future.
+    
+    Parameters:
+        - `basket_id`: The ID of the basket for which evaluate the occupation.
+        - `present`: The date from which the forecast is performed.
+        - `num_history_days`: The number of days prior the `present` date to take data from.
+        - `num_predictory_days`: The number of days past the `present` date to predict.
+        - `t`: The instant in the future, expressed as a Python `datetime`, where we wish to forecast the occupation.
 
-    # TODO
+    Keyword parameters:
+        - `debug`: Whether to show debug plots.
+        - `num_past_days_in_plot`: The number of days prior the `present` date to show on the debug plot.
+        - `num_future_days_in_plot`: The number of days past the `present` date to show on the debug plot.
 
-    return np.random.rand()
+    Returns:
+        A scalar representing the forecasted occupation at the instant `t`.
+    """
 
+    debug = kwargs.get('debug', False)
 
-def main():
-    MOCK_BASKET_ID = 0x23232323
-
-    forecast_occupation_for_next_days(
-        MOCK_BASKET_ID,
-        datetime(2016, 8, 1),
-        100,
-        14,
-        debug=True,
-        num_past_days_in_plot=10,
-        num_future_days_in_plot=5
+    prediction = forecast_occupation_for_next_days(
+        basket_id,
+        present,
+        num_history_days,
+        num_future_days,
+        **kwargs
     )
 
+    future_t, future_occupation_t = prediction
 
-if __name__ == "__main__":
-    main()
+    min_future_t = np.amin(future_t)
+
+    # Find the interpolated occupation value at the instant t by shifting the future - predicted - samples
+    # and the t to the minimum future date, and scaling the delta to seconds. This is done because `np.interp`
+    # can't handle datetime(s) and avoids the usage of UNIX timestamps 
+    interpolated_occupation = np.interp(
+        (t - min_future_t).total_seconds(),
+        [dt.total_seconds() for dt in future_t - min_future_t],
+        future_occupation_t
+    )
+
+    # Plotting
+    if debug:
+        fig, ax = plt.subplots()
+
+        pd.DataFrame(np.array([future_t, future_occupation_t]).transpose()) \
+            .plot(ax=ax, x=0, y=1, c='orange')
+        
+        pd.DataFrame(np.array([[t], [interpolated_occupation]]).transpose()) \
+            .plot.scatter(ax=ax, x=0, y=1, c='blue')
+
+        ax.set_ylim(0, 1.25)
+
+        fig.tight_layout()
+
+        plt.show()
+
+    return interpolated_occupation
 
