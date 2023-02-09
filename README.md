@@ -62,7 +62,7 @@ Starts a web server that permits to other SmartBasket components to make use of 
 python3 src/webservice.py
 ```
 
-**Functions:**
+## Webservice
 
 ```
 GET /api/occupation
@@ -72,6 +72,8 @@ Retrieve the occupation of a Basket at a certain instant in time.
 
 - `basket`: The ID of the basket.
 - `t`: The instant in time.
+
+---
 
 ```
 GET /api/forecast_occupation
