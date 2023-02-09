@@ -32,7 +32,7 @@ python3 src/sample_data_generator.py
 
 ### occupation_visualizer
 
-Visualizes the occupation function between two dates (defined within the script). The occupation is derived based on the measurements.
+Visualizes the occupation function between two dates for the mock Basket. The occupation is derived based on the measurements.
 
 **Usage:**
 ```
@@ -43,7 +43,7 @@ python3 src/occupation_visualizer.py
 
 ### occupation_forecast_visualizer
 
-Visualizes the occupation forecast at a certain point in time for the next days (defined within the script).
+Visualizes the occupation forecast given an history of past measurements for the following days, for the mock Basket.
 
 **Usage:**
 ```
