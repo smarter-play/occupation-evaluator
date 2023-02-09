@@ -19,7 +19,7 @@ Copy `.env.example` to `.env` and initialize its fields, giving connection info 
 
 This service is an ensemble of several entrypoints:
 
-### sample_data_generator
+#### sample_data_generator
 
 Fills the database with sample measurements associated to a mock Basket. The measurements are placed between two dates (defined within the script) and are generated using probability distributions cheaseled to represent a realistic scenario.
 
@@ -30,7 +30,7 @@ python3 src/sample_data_generator.py
 
 ---
 
-### occupation_visualizer
+#### occupation_visualizer
 
 Visualizes the occupation function between two dates for the mock Basket. The occupation is derived based on the measurements.
 
@@ -41,7 +41,7 @@ python3 src/occupation_visualizer.py
 
 ---
 
-### occupation_forecast_visualizer
+#### occupation_forecast_visualizer
 
 Visualizes the occupation forecast given an history of past measurements for the following days, for the mock Basket.
 
@@ -52,7 +52,7 @@ python3 src/occupation_forecast_visualizer.py
 
 ---
 
-### webservice
+#### webservice
 
 Starts a web server that permits to other SmartBasket components to make use of the occupation functionalities.
 
