@@ -87,7 +87,7 @@ Forecast the occupation for a Basket at a future instant in time, given measurem
 - `num_history_days`: The number of days before `present` for which measurements are taken.
 - `num_predicted_days`: The number of days in the future to predict.
 
-A wisdom usage expect `t` to be between `present` and `present + num_predicted_days`.
+A wisdom usage expect `t` to be between `present` and `present + num_predicted_days` and `num_history_days` such that `present - num_history_days` was within the period of activity of the Basket.
 
 ## Useful links
 
