@@ -3,7 +3,7 @@
 
 The data sent by the Basket, other than assisting the game, is also useful to evaluate the occupation of the Basket itself.
 
-The occupation evaluation is the process of, given a certain instant in time `t`, evaluate the probability of the Basket of being occupied `o(t)`.
+The **Occupation evaluation** is the process of, given a certain instant in time `t`, evaluate the probability of the Basket of being occupied `o(t)`.
 
 To evaluate this probability at `t`, we use the measurements as an input (i.e. AccelerometerData, BasketData and PeopleDetectedData) in the neighborhood of `t`. Every measurement gives a contribution to the occupation probability that becomes lower as the event gets older. As a result, if many events happen at the same time, `o(t)` will result higher and if the basket hasn't sent measurements for a while `o(t)` will be lower and eventually zero.
 
