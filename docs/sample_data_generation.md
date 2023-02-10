@@ -32,9 +32,9 @@ For every day type and for every measurement type, it's built a probability dist
 Even the number of timestamps drawn within a day per measurement are dependent on the day type. Trivially it's expected to have more baskets, people detected and accelerometer data on a Playable day rather than on an Unplayable day.
 
 <p align="center">
-  <img src="/occupation-evaluator/assets/images/busy_day_eg.png" width="350" />
-  <img src="/occupation-evaluator/assets/images/unplayable_day_eg.png" width="350" /> 
-  <img src="/occupation-evaluator/assets/images/playable_day_eg.png" width="350" />
+  <img src="./assets/images/busy_day_eg.png" width="350" />
+  <img src="./assets/images/unplayable_day_eg.png" width="350" /> 
+  <img src="./assets/images/playable_day_eg.png" width="350" />
 </p>
 
 ### How a day is classified?
