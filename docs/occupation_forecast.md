@@ -25,7 +25,9 @@ It's also very important to hint Prophet that some days are an exception to the 
 
 #### Fitting visualization on fake measurements
 
-<img src="/screenshots/occupation_prediction.png" />
+<p align="center">
+  <img src="/screenshots/occupation_prediction.png" />
+</p>
 
 ### Inference
 
@@ -33,6 +35,8 @@ After fitting, the prediciton will be a sequence of occupancy values for the nex
 
 Possibly, given a time instant `t^` in the future the final occupancy value is evaluated by interpolating over this sequence in order to approximate `o(t^)`.
 
-<img src="/screenshots/occupation_prediction_interp.png" />
-
+<p align="center">
+  <img src="/screenshots/occupation_prediction_interp.png" />
+</p>
+  
 
