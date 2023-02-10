@@ -6,13 +6,13 @@ The sample-data generation is the process of generating fake, but as much as rea
 The "mock Basket" is a special Basket used for tests that is characterized by the ID `0x23232323` in hex, or `589505315` in decimal.
 
 The problem consist in generating three type of measurements:
-- **Accelerometer data**: an acceleration of the Basket board above a certain threshold.
+- **Accelerometer data**: the movement of the Basket or of the Basket board above a certain threshold.
 - **People detection data**: the detection of people standing in front of the basket.
 - **Basket data**: anything that occluded the IR detector (most commonly, the ball entering the basket).
 
 The task of the generator, given a range of dates, is to generate for each day within the range fake measurements.
 
-The generator distinguish three types of days in a year:
+In order to do this, the generator distinguish three types of days in a year:
 - **Busy day**: a day for example of school or of work.
 - **Unplayable day**: a day that is considered to be unplayable for example because of bad weather conditions (rain or cold).
 - **Playable day**: any other day.
@@ -42,7 +42,7 @@ A date is classified using the following procedure:
 
 #### Unplayable day classification
 
-The condition for a day to be unplayable should be derived from realistic weather data. However we don't have access to a weather service that could give us the exact weather conditions back in the past and it's integration would have been an over-engineering for the generation of sample fake-data.
+The condition for a day to be unplayable should be derived from realistic weather data. However we don't have access to a weather service that could give us the exact weather conditions back in the past and its integration would have been an over-engineering for the generation of sample fake-data.
 
 For this purpose, it's been implemented a predicate that given a date returns whether the day was playable or unplayable. This predicate has to be deterministic, thus the day condition can't involve a random generator. The randomness has been replaced with a noise function that given a numerical representation of the date (e.g. Unix timestamp) returns a `[0, 1]` value. This value is then converted to a boolean value giving more probability to autumn/winter month' days to be unplayable and less to spring/summer days.
 
@@ -57,7 +57,7 @@ def is_unplayable_day(date: datetime):
 
 #### Busy day classification
 
-A day is considered busy trivially if falls in some hand-crafted conditions:
+A day is considered busy trivially if respects these hand-crafted conditions:
 - The month is within school period (January to May or September to December)
 - It's not a Sunday
 - It's not Christmas holiday
