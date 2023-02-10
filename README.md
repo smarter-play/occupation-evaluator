@@ -15,53 +15,6 @@ pip install .
 
 Copy `.env.example` to `.env` and initialize its fields, giving connection info and credentials for the DB (that's initialized by [app-backend](https://github.com/smarter-play/app-backend/)).
 
-## How to use
-
-This service is an ensemble of several entrypoints:
-
-#### sample_data_generator
-
-Fills the database with sample measurements associated to a mock Basket. The measurements are placed between two dates (defined within the script) and are generated using probability distributions cheaseled to represent a realistic scenario.
-
-**Usage:**
-```
-python3 src/sample_data_generator.py
-```
-
----
-
-#### occupation_visualizer
-
-Visualizes the occupation function between two dates for the mock Basket. The occupation is derived based on the measurements.
-
-**Usage:**
-```
-python3 src/occupation_visualizer.py
-```
-
----
-
-#### occupation_forecast_visualizer
-
-Visualizes the occupation forecast given an history of past measurements for the following days, for the mock Basket.
-
-**Usage:**
-```
-python3 src/occupation_forecast_visualizer.py --present '2016-08-01' --num_history_days 280 --num_predicted_days 14 --t '2016-08-07 17:00:00'
-```
-
----
-
-#### webservice
-
-Starts a web server that permits to other SmartBasket components to make use of the occupation functionalities.
-
-**Usage:**
-
-```
-python3 src/webservice.py
-```
-
 ## Useful links
 
 - https://facebook.github.io/prophet/docs/quick_start.html
