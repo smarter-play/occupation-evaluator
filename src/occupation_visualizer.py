@@ -6,13 +6,21 @@ from math import *
 import matplotlib.pyplot as plt
 from occupation import evaluate_occupation
 import pandas as pd
+import argparse
 
 
 def main():
-    MOCK_BASKET_ID = 0x23232323
+    parser = argparse.ArgumentParser(description="")
 
-    from_date = datetime(2016, 8, 15, 0, 0)
-    to_date = datetime(2016, 8, 15, 23, 59)
+    parser.add_argument("-b", "--basket", type=int, required=True)
+    parser.add_argument("-f", "--from_date", type=datetime.fromisoformat, required=True)
+    parser.add_argument("-t", "--to_date", type=datetime.fromisoformat, required=True)
+
+    args = parser.parse_args()
+
+    basket_id = args.basket
+    from_date = args.from_date
+    to_date = args.to_date
 
     db_cursor = db_connection.cursor()
 
@@ -22,7 +30,7 @@ def main():
         WHERE
             basket_id = %s AND
             timestamp BETWEEN %s AND %s
-    """, (MOCK_BASKET_ID, from_date, to_date,))
+    """, (basket_id, from_date, to_date,))
     accelerometer_data = np.array([row[0] for row in db_cursor.fetchall()])
 
     # Retrieve BasketData
@@ -31,7 +39,7 @@ def main():
         WHERE
             basket_id = %s AND
             timestamp BETWEEN %s AND %s
-    """, (MOCK_BASKET_ID, from_date, to_date,))
+    """, (basket_id, from_date, to_date,))
     basket_data = np.array([row[0] for row in db_cursor.fetchall()])
 
     # Retrieve PeopleDetectedData
@@ -40,7 +48,7 @@ def main():
         WHERE
             basket_id = %s AND
             timestamp BETWEEN %s AND %s
-    """, (MOCK_BASKET_ID, from_date, to_date,))
+    """, (basket_id, from_date, to_date,))
     people_detected_data = np.array([row[0] for row in db_cursor.fetchall()])
 
     db_cursor.close()
@@ -64,7 +72,7 @@ def main():
     ax[0].set_ylim(0, 1)
 
     t = pd.date_range(from_date, to_date, periods=1028).to_pydatetime()
-    occupation_t = evaluate_occupation(MOCK_BASKET_ID, t)
+    occupation_t = evaluate_occupation(basket_id, t)
 
     pd.DataFrame(np.array([t, occupation_t]).transpose()) \
         .plot(ax=ax[1], x=0, y=1)
