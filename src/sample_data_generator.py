@@ -269,7 +269,7 @@ def sample_measurements_for_day(date: datetime, verbose=True):
     basket_samples = day_type.draw_basket_samples()
     people_detected_samples = day_type.draw_people_detected_samples()
 
-    if verbose:
+    if verbose and date.month == 8:
         fig, ax = plt.subplots(nrows=3)
 
         fig.suptitle(f"{date.strftime('%d %B %Y')} ({date.strftime('%A')}) → {day_type.name}")
@@ -392,7 +392,7 @@ def show_day_type_distributions(day_type: DayType, **kwargs):
 
 
 if __name__ == "__main__":
-    verbose=False
+    verbose=True
 
     try:
         if verbose:
