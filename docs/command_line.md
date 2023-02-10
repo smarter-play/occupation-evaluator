@@ -1,9 +1,3 @@
----
-layout: default
----
-
-
-## Command line
 
 This repository offers several commands that can be mostly used for debug purposes.
 
