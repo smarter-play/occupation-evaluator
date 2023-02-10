@@ -1,6 +1,10 @@
 
 ## Webservice
 
+This repository hosts also a webservice that can be used to allow other components to access occupation evaluation functionalities.
+
+### Get occupation
+
 ```
 GET /api/occupation
 ```
@@ -10,7 +14,7 @@ Retrieve the occupation of a Basket at a certain instant in time.
 - `basket`: The ID of the basket.
 - `t`: The instant in time.
 
----
+### Forecast occupation
 
 ```
 GET /api/forecast_occupation
