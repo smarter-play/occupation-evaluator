@@ -4,10 +4,9 @@ import argparse
 
 
 def main():
-    MOCK_BASKET_ID = 0x23232323
-
     parser = argparse.ArgumentParser(description="")
 
+    parser.add_argument("-b", "--basket", type=int, required=True)
     parser.add_argument("-p", "--present", type=datetime.fromisoformat, required=True)
     parser.add_argument("-np", "--num_history_days", type=int, required=True)
     parser.add_argument("-nf", "--num_predicted_days", type=int, required=True)
@@ -16,12 +15,14 @@ def main():
     args = parser.parse_args()
 
     occupation = evaluate_occupation_forecast(
-        MOCK_BASKET_ID,
+        args.basket,
         args.present,
         args.num_history_days,
         args.num_predicted_days,
         args.t,
-        debug=True
+        debug=True,
+        num_past_days_in_plot=12,
+        num_future_days_in_plot=3,
     )
 
     print(f"Occupation at {args.t} is: {occupation:.2f}")
