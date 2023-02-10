@@ -1,3 +1,9 @@
+---
+layout: default
+title: Webservice
+---
+
+# Webservice
 
 This repository hosts also a webservice that can be used to allow other components to access occupation evaluation functionalities. The host and port on which the webservice will be hosted are defined in `.env`.
 

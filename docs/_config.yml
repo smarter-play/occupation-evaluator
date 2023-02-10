@@ -1,5 +1,7 @@
 theme: minima
 
+author: SmarterPlay
+
 header_pages:
   - index.md
   - sample_data_generation.md
