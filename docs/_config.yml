@@ -1,1 +1,9 @@
 theme: minima
+
+header_pages:
+  - index.md
+  - sample_data_generation.md
+  - occupation.md
+  - occupation_forecast.md
+  - command_line.md
+  - webservice.md
