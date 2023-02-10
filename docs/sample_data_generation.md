@@ -1,7 +1,7 @@
 
 # Sample data generation
 
-The sample-data generation is the process of generating fake, but as much as realistic as possible, measurements associated to the mock Basket.
+The **Sample-data generation** is the process of generating fake, but as much as realistic as possible, measurements associated to the mock Basket.
 
 The "mock Basket" is a special Basket used for tests that is characterized by the ID `0x23232323` in hex, or `589505315` in decimal.
 
