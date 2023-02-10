@@ -1,3 +1,6 @@
+---
+layout: default
+---
 
 This repository offers several commands that can be mostly used for debug purposes.
 

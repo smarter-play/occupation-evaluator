@@ -1,3 +1,6 @@
+---
+layout: default
+---
 
 The **Sample-data generation** is the process of generating fake, but as much as realistic as possible, measurements associated to the mock Basket.
 
