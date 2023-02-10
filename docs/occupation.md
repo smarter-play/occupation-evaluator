@@ -17,6 +17,10 @@ We've decided to model the probability contribution function as a negative parab
   <img src="/screenshots/occupation_probability_contrib_eq.png" /> 
 </p>
 
+<p align="center">
+  <img src="/screenshots/occupation_contribute_parable.PNG" width="250" /> 
+</p>
+
 `dt` is the difference between the `t` time at which the occupation has to be evaluated and `t0` which is the time when the measurement happened. Both `dt`and `d` are measured in seconds.
 
 It's engineer's task to tune the `p` and `d` parameter for every measurement in order to obtain a suitable `o(t)` function.
