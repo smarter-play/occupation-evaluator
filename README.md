@@ -47,7 +47,7 @@ Visualizes the occupation forecast given an history of past measurements for the
 
 **Usage:**
 ```
-python3 src/occupation_forecast_visualizer.py
+python3 src/occupation_forecast_visualizer.py --present '2016-08-01' --num_history_days 280 --num_predicted_days 14 --t '2016-08-07 17:00:00'
 ```
 
 ---
