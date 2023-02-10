@@ -1,6 +1,12 @@
+from dotenv import load_dotenv
+
+
+load_dotenv()
+
+
+import os
 from flask import Flask, request
 from datetime import datetime
-from dateutil.parser import isoparse
 from occupation import evaluate_occupation
 from occupation_forecast import evaluate_occupation_forecast
 
@@ -62,4 +68,7 @@ def forecast_occupation():
 
 
 if __name__ == '__main__':
-    app.run()
+    app.run(
+        host=os.environ["WEBSERVICE_HOST"],
+        port=os.environ["WEBSERVICE_PORT"],
+    )
