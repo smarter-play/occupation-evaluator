@@ -1,6 +1,3 @@
----
-layout: default
----
 
 The **Occupation forecast** is the process of forecasting the future occupation based on previous measurements for a specific Basket.
 

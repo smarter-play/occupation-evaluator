@@ -1,6 +1,3 @@
----
-layout: default
----
 
 This repository offers several commands that can be mostly used for debug purposes.
 
@@ -27,7 +24,7 @@ python3 src/occupation_visualizer.py -b 589505315 -f '2016-08-15 00:00' -t '2016
 ```
 
 | Parameter | Type | Value |
-| --- | --- | --- |
+| --------- | ---- | ----- |
 | `--basket`, `-b` | `int` | The ID of the Basket |
 | `--from_date`, `-f` | `ISO 8601 date` | The range's initial date |
 | `--to_date`, `-f` | `ISO 8601 date` | The range's final date |

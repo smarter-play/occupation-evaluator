@@ -1,6 +1,3 @@
----
-layout: default
----
 
 The data sent by the Basket, other than assisting the game, is also useful to evaluate the occupation of the Basket itself.
 
