@@ -1,4 +1,3 @@
-# occupation-forecaster
 
 ## Webservice
 
