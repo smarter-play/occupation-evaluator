@@ -18,6 +18,10 @@ Copy `.env.example` to `.env` and initialize its fields, giving connection info 
 
 In order to use it, you must have a SmartBasket DB instance running (which is managed by [app-backend](https://github.com/smarter-play/app-backend/)).
 
+## How to use
+
+A full list of the functionalities of this service and how it implements them can be found on the documentation page.
+
 ## Useful links
 
 - https://facebook.github.io/prophet/docs/quick_start.html
