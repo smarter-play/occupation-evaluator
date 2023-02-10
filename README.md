@@ -20,7 +20,7 @@ In order to use it, you must have a SmartBasket DB instance running (which is ma
 
 ## How to use
 
-A full list of the functionalities of this service and how it implements them can be found on the documentation page.
+A full list of the functionalities provided by this service, how to access them and even how they're implemented can be found on its documentation page.
 
 ## Useful links
 
