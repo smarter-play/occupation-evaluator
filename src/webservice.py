@@ -4,7 +4,13 @@ from dotenv import load_dotenv
 load_dotenv()
 
 
+import logging
 import os
+
+
+logging.basicConfig(level=getattr(logging, os.environ['LOG_LEVEL'].upper(), None))
+
+
 from flask import Flask, request
 from datetime import datetime
 from occupation import evaluate_occupation

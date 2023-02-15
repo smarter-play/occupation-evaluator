@@ -1,6 +1,12 @@
 from db import db_connection
 import numpy as np
 from math import *
+import logging
+import os
+
+
+logger = logging.getLogger("occupation")
+#logger.setLevel(getattr(logging, os.environ['LOG_LEVEL'].upper(), None))
 
 
 def evaluate_occupation(basket_id: int, t):
@@ -17,7 +23,10 @@ def evaluate_occupation(basket_id: int, t):
     """
 
     if not (type(t) == list or type(t) == np.ndarray):
+        logger.debug(f"Evaluating the occupation at {t}")
         t = np.array([t])
+    else:
+        logger.debug(f"Evaluation the occupation on a sequence of {len(t)} time samples starting from {t[0]} ending at {t[-1]}")
     
     t_min, t_max = np.amin(t), np.amax(t)
 
@@ -34,6 +43,8 @@ def evaluate_occupation(basket_id: int, t):
     """, (basket_id, t_min, t_max,))
     accelerometer_data = [row[0] for row in db_cursor.fetchall()]
 
+    logger.debug(f"Queried {len(accelerometer_data)} AccelerometerData measurements")
+
     db_cursor.execute("""
         SELECT timestamp FROM basket_data
         WHERE
@@ -44,6 +55,8 @@ def evaluate_occupation(basket_id: int, t):
     """, (basket_id, t_min, t_max,))
     basket_data = [row[0] for row in db_cursor.fetchall()]
 
+    logger.debug(f"Queried {len(accelerometer_data)} BasketData measurements")
+
     db_cursor.execute("""
         SELECT timestamp FROM people_detected_data
         WHERE
@@ -53,6 +66,8 @@ def evaluate_occupation(basket_id: int, t):
             timestamp ASC
     """, (basket_id, t_min, t_max,))
     people_detected_data = [row[0] for row in db_cursor.fetchall()]
+
+    logger.debug(f"Queried {len(accelerometer_data)} PeopleDetectedData measurements")
 
     db_cursor.close()
 
@@ -93,10 +108,20 @@ def evaluate_occupation(basket_id: int, t):
 
         return y
 
+    logger.debug(f"Evaluating occupation contribution from AccelerometerData...")
+
     evaluate_occupation(t, accelerometer_data, lambda t, event_t: probability_curve(t, event_t, 0.1, 60 * 10), o_t)
+
+    logger.debug(f"Evaluating occupation contribution from BasketData...")
+
     evaluate_occupation(t, basket_data, lambda t, event_t: probability_curve(t, event_t, 0.4, 60 * 20), o_t)
+
+    logger.debug(f"Evaluating occupation contribution from PeopleDetectedData...")
+
     evaluate_occupation(t, people_detected_data, lambda t, event_t: probability_curve(t, event_t, 0.06, 60), o_t)
 
     o_t = np.minimum(o_t, 1)
+
+    logger.debug(f"Evaluated a sequence of {len(o_t)} occupation samples (avg={np.average(o_t)})")
 
     return o_t[0] if len(o_t) == 1 else o_t.tolist()
