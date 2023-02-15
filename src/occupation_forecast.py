@@ -21,7 +21,7 @@ def evaluate_occupation_forecast_for_next_days(
         - `basket_id`: The ID of the basket for which evaluate the occupation.
         - `present`: The date from which the forecast is performed.
         - `num_history_days`: The number of days prior the `present` date to take data from.
-        - `num_predictory_days`: The number of days past the `present` date to predict.
+        - `num_predicted_days`: The number of days past the `present` date to predict.
 
     Keyword parameters:
         - `debug`: Whether to show debug plots.
