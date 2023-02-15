@@ -3,7 +3,7 @@ from math import *
 import numpy as np
 import numpy.typing
 import matplotlib.pyplot as plt
-from db import db_connection
+from db import create_db_connection
 from weather import is_unplayable_day
 
 
@@ -296,6 +296,7 @@ def sample_measurements_for_day(date: datetime, verbose=True):
 
         plt.show()
 
+    db_connection = create_db_connection()
     db_cursor = db_connection.cursor()
 
     # Insert AccelerometerData
@@ -342,6 +343,7 @@ def sample_measurements_for_day(date: datetime, verbose=True):
     ])
 
     db_cursor.close()
+    db_connection.close()
 
     return (
         accelerator_data_samples,
@@ -352,11 +354,15 @@ def sample_measurements_for_day(date: datetime, verbose=True):
 
 def sample_measurements_between(from_date: datetime, to_date: datetime, verbose=True):
     # Delete the old measurements referred to the mock basket
+    db_connection = create_db_connection()
     db_cursor = db_connection.cursor()
+    
     db_cursor.execute("DELETE FROM accelerometer_data WHERE basket_id=%s", (MOCK_BASKET_ID,))
     db_cursor.execute("DELETE FROM basket_data WHERE basket_id=%s", (MOCK_BASKET_ID,))
     db_cursor.execute("DELETE FROM people_detected_data WHERE basket_id=%s", (MOCK_BASKET_ID,))
+
     db_cursor.close()
+    db_connection.close()
 
     date = from_date
     while (date <= to_date):

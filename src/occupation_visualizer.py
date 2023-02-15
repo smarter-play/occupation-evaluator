@@ -1,6 +1,6 @@
 from datetime import datetime, timedelta
 import pytz
-from db import db_connection
+from db import create_db_connection
 import numpy as np
 from math import *
 import matplotlib.pyplot as plt
@@ -22,6 +22,7 @@ def main():
     from_date = args.from_date
     to_date = args.to_date
 
+    db_connection = create_db_connection()
     db_cursor = db_connection.cursor()
 
     # Retrieve AccelerometerData
@@ -52,6 +53,7 @@ def main():
     people_detected_data = np.array([row[0] for row in db_cursor.fetchall()])
 
     db_cursor.close()
+    db_connection.close()
 
     # Plot
     fig, ax = plt.subplots(nrows=2, figsize=(16, 6), sharex=True)

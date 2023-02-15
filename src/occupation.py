@@ -1,8 +1,7 @@
-from db import db_connection
+from db import create_db_connection
 import numpy as np
 from math import *
 import logging
-import os
 
 
 logger = logging.getLogger("occupation")
@@ -31,6 +30,8 @@ def evaluate_occupation(basket_id: int, t):
     t_min, t_max = np.amin(t), np.amax(t)
 
     # Query data
+    db_connection = create_db_connection()
+
     db_cursor = db_connection.cursor()
 
     db_cursor.execute("""
@@ -70,6 +71,7 @@ def evaluate_occupation(basket_id: int, t):
     logger.debug(f"Queried {len(accelerometer_data)} PeopleDetectedData measurements")
 
     db_cursor.close()
+    db_connection.close()
 
     # Occupation evaluation
     o_t = np.zeros(len(t))
