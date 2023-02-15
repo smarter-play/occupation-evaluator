@@ -8,7 +8,7 @@ import logging
 import os
 
 
-logging.basicConfig(level=getattr(logging, os.environ['LOG_LEVEL'].upper(), None))
+logging.basicConfig(level=getattr(logging, os.environ.get('LOG_LEVEL', "WARNING").upper(), None))
 
 
 from flask import Flask, request
