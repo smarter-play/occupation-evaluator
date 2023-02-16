@@ -36,7 +36,7 @@ def main():
 
     # Retrieve BasketData
     db_cursor.execute("""
-        SELECT timestamp FROM basket_data
+        SELECT timestamp FROM score_data
         WHERE
             basket_id = %s AND
             timestamp BETWEEN %s AND %s

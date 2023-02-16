@@ -26,6 +26,6 @@ def create_db_connection():
         user=db_username,
         password=db_password,
         database=db_database,
-        pool_size=10,
+        pool_size=16,
     )
     return db_connection

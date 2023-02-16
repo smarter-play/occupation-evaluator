@@ -320,7 +320,7 @@ def sample_measurements_for_day(date: datetime, verbose=True):
 
     # Insert Basket
     db_cursor.executemany("""
-        INSERT INTO basket_data
+        INSERT INTO score_data
             (basket_id, timestamp)
         VALUES
             (%(basket_id)s, %(timestamp)s)
@@ -358,7 +358,7 @@ def sample_measurements_between(from_date: datetime, to_date: datetime, verbose=
     db_cursor = db_connection.cursor()
     
     db_cursor.execute("DELETE FROM accelerometer_data WHERE basket_id=%s", (MOCK_BASKET_ID,))
-    db_cursor.execute("DELETE FROM basket_data WHERE basket_id=%s", (MOCK_BASKET_ID,))
+    db_cursor.execute("DELETE FROM score_data WHERE basket_id=%s", (MOCK_BASKET_ID,))
     db_cursor.execute("DELETE FROM people_detected_data WHERE basket_id=%s", (MOCK_BASKET_ID,))
 
     db_cursor.close()
