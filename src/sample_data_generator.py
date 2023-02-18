@@ -253,7 +253,7 @@ busy_day = BusyDay()
 playable_day = PlayableDay()
 
 
-def sample_measurements_for_day(date: datetime, verbose=True):
+def sample_measurements_for_day(db_connection, date: datetime, verbose=True):
     day_type = None
 
     if UnplayableDay.is_(date):
@@ -296,7 +296,6 @@ def sample_measurements_for_day(date: datetime, verbose=True):
 
         plt.show()
 
-    db_connection = create_db_connection()
     db_cursor = db_connection.cursor()
 
     # Insert AccelerometerData
@@ -343,7 +342,6 @@ def sample_measurements_for_day(date: datetime, verbose=True):
     ])
 
     db_cursor.close()
-    db_connection.close()
 
     return (
         accelerator_data_samples,
@@ -355,6 +353,7 @@ def sample_measurements_for_day(date: datetime, verbose=True):
 def sample_measurements_between(from_date: datetime, to_date: datetime, verbose=True):
     # Delete the old measurements referred to the mock basket
     db_connection = create_db_connection()
+
     db_cursor = db_connection.cursor()
     
     db_cursor.execute("DELETE FROM accelerometer_data WHERE basket_id=%s", (MOCK_BASKET_ID,))
@@ -362,14 +361,14 @@ def sample_measurements_between(from_date: datetime, to_date: datetime, verbose=
     db_cursor.execute("DELETE FROM people_detected_data WHERE basket_id=%s", (MOCK_BASKET_ID,))
 
     db_cursor.close()
-    db_connection.close()
 
     date = from_date
     while (date <= to_date):
-        sample_measurements_for_day(date, verbose)
+        sample_measurements_for_day(db_connection, date, verbose)
         date += timedelta(days=1)
 
     db_connection.commit()
+    db_connection.close()
 
 
 def show_day_type_distributions(day_type: DayType, **kwargs):
@@ -398,7 +397,7 @@ def show_day_type_distributions(day_type: DayType, **kwargs):
 
 
 if __name__ == "__main__":
-    verbose=True
+    verbose=False
 
     try:
         if verbose:
