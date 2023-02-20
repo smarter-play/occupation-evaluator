@@ -169,6 +169,8 @@ def evaluate_occupation_forecast(
         future_occupation_t
     )
 
+    interpolated_occupation = np.clip(interpolated_occupation, 0, 1)
+
     # Plotting
     if debug:
         fig, ax = plt.subplots()
